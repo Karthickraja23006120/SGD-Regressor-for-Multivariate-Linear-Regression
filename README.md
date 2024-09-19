@@ -22,6 +22,7 @@ Program to implement the multivariate linear regression model for predicting the
 Developed by: Karthick Raja K
 RegisterNumber: 212223240066
 */
+```
 import numpy as np
 import pandas as pd
 from sklearn.datasets import fetch_california_housing
@@ -54,7 +55,7 @@ Y_test=scaler_Y.inverse_transform(Y_test)
 mse=mean_squared_error(Y_test,Y_pred)
 print("Mean Sqaured Error:",mse)
 print("\nPredictions:\n",Y_pred[:5])
-
+```
 ## Output:
 ![multivariate linear regression model for predicting the price of the house and number of occupants in the house](sam.png)
 ![Screenshot 2024-09-19 112921](https://github.com/user-attachments/assets/0bb17af5-9ffa-4d28-aaac-966d6a0a728e)
