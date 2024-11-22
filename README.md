@@ -4,25 +4,24 @@
 To write a program to predict the price of the house and number of occupants in the house with SGD regressor.
 
 ## Equipments Required:
-1. Hardware – PC
+1. Hardware – PCs
 2. Anaconda – Python 3.7 Installation / Jupyter notebook
 
 ## Algorithm
-1. Start
-2. Data preparation
-3. Hypothesis Definition
-4. Cost Function
-5.Parameter Update Rule
-6.Iterative Training
-7.Model evaluation
-8.End
+1.Import necessary libraries for data handling, machine learning, and evaluation. Fetch the California housing dataset and create a DataFrame with features and the target.   
+2. Select the first three features  and combine the target with the seventh feature.Split the data into training and testing sets.   
+3. Apply StandardScaler to normalize both X and Y for training and testing datasets   
+4. Initialize an SGDRegressor model.Use MultiOutputRegressor to handle multiple outputs.   
+5. Fit the model to the scaled training data.   
+6. Predict on the test set.Inverse transform the predictions and test data to their original scale   
+7. Calculate the Mean Squared Error (MSE) between the predicted and actual values.Print the MSE and display the first few predictions.   
 
 ## Program:
 ```
 /*
 Program to implement the multivariate linear regression model for predicting the price of the house and number of occupants in the house with SGD regressor.
 Developed by: Karthick Raja K
-RegisterNumber:  212223240066
+RegisterNumber: 212223240066
 */
 import numpy as np
 import pandas as pd
@@ -32,50 +31,36 @@ from sklearn.multioutput import MultiOutputRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import StandardScaler
-dataset = fetch_california_housing()
-df=pd.DataFrame(dataset.data,columns=dataset.feature_names)
-df['HousingPrice']=dataset.target
+
+data=fetch_california_housing()
+df=pd.DataFrame(data.data,columns=data.feature_names)
+df['target']=data.target
 print(df.head())
-```
-![image](https://github.com/user-attachments/assets/ad791d97-12e6-4627-82e6-0b1d7f85a704)
-```
-X = df.drop(columns=['AveOccup','HousingPrice'])
-X.info()
-```
-![image](https://github.com/user-attachments/assets/e10112c5-3b59-4a1d-a9f2-394188f12161)
-```
-Y = df[['AveOccup','HousingPrice']]
-Y.info()
-```
-![image](https://github.com/user-attachments/assets/a4949cf4-ca8a-429d-9aec-21773f15c834)
-```
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
-scaler_X = StandardScaler()
-scaler_Y = StandardScaler()
-X_train = scaler_X.fit_transform(X_train)
-X_test = scaler_X.transform(X_test)
-Y_train = scaler_Y.fit_transform(Y_train)
-Y_test = scaler_Y.transform(Y_test)
-sgd = SGDRegressor(max_iter=1000, tol=1e-3)
-multi_output_sgd = MultiOutputRegressor(sgd)
-multi_output_sgd.fit(X_train, Y_train)
-```
-![image](https://github.com/user-attachments/assets/a584154f-0dec-44c7-aea1-000950ef4e38)
 
+X=data.data[:,:3]
+Y=np.column_stack((data.target,data.data[:,6]))
+X_train,X_test,Y_train,Y_test=train_test_split(X,Y,test_size=0.2,random_state=42)
+scaler_X=StandardScaler()
+scaler_Y=StandardScaler()
+X_train=scaler_X.fit_transform(X_train)
+X_test=scaler_X.transform(X_test)
+Y_train=scaler_Y.fit_transform(Y_train)
+Y_test=scaler_Y.transform(Y_test)
+sgd=SGDRegressor(max_iter=1000,tol=1e-3)
+multi_output_sgd=MultiOutputRegressor(sgd)
+multi_output_sgd.fit(X_train,Y_train)
+Y_pred=multi_output_sgd.predict(X_test)
+Y_pred=scaler_Y.inverse_transform(Y_pred)
+Y_test=scaler_Y.inverse_transform(Y_test)
+mse=mean_squared_error(Y_test,Y_pred)
+print("Mean Sqaured Error:",mse)
+print("\nPredictions:\n",Y_pred[:5])
 ```
-Y_pred = multi_output_sgd.predict(X_test)
-Y_pred = scaler_Y.inverse_transform(Y_pred)
-Y_test = scaler_Y.inverse_transform(Y_test)
-mse = mean_squared_error(Y_test, Y_pred)
-print("Mean Squared Error:", mse)
-```
-![image](https://github.com/user-attachments/assets/0a0eadaf-3286-4a3a-87dc-b69939697142)
-```
-print("\nPredictions:\n", Y_pred[:5])
-```
+
 ## Output:
+![Screenshot 2024-09-13 134002](https://github.com/user-attachments/assets/6d8d3430-22e5-431c-af43-0ac53b67c96b)
 
-![image](https://github.com/user-attachments/assets/2229c44a-9837-4c06-adc1-040f5936c022)
+![Screenshot 2024-09-13 134010](https://github.com/user-attachments/assets/d303784e-eb4b-49d2-8d7e-2a4ba8374659)
 
 
 ## Result:
